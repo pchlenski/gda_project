@@ -37,6 +37,20 @@ def linear_independence(x, y, z, cutoff=0.4):
     else:
         return False
 
+def independent(x, y, z):
+    """ Cribbed from CI 1 homework 3 """
+    x = (x - x.mean()) / x.std()
+    y = (y - y.mean()) / y.std()
+    if z.size > 0:
+        # z = np.stack(z).T
+        regy = LinearRegression().fit(z, y)
+        y = y - regy.predict(z)
+        regx = LinearRegression().fit(z, x)
+        x = x - regx.predict(z)
+        x = (x - x.mean()) / x.std()
+        y = (y - y.mean()) / y.std()
+    return abs((x*y).mean() - x.mean()*y.mean())*100 < 1
+
 def test_independences(data, test=linear_independence):
     """ Check each linear (conditional) independence """
     n_points, n_dims = data.shape
