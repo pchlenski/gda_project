@@ -49,7 +49,8 @@ def independent(x, y, z):
         x = x - regx.predict(z)
         x = (x - x.mean()) / x.std()
         y = (y - y.mean()) / y.std()
-    return abs((x*y).mean() - x.mean()*y.mean())*100 < 1
+    val = abs((x*y).mean() - x.mean()*y.mean())*100
+    return val < 1
 
 def test_independences(data, test=linear_independence):
     """ Check each linear (conditional) independence """
