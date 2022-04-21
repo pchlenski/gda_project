@@ -1,5 +1,6 @@
 from itertools import chain, combinations
 from sklearn.linear_model import LinearRegression
+import numpy as np
 
 def powerset(iterable):
     """ Taken from powertools recipe on itertools page:
