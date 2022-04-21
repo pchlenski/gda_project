@@ -89,7 +89,7 @@ def generate_confounded(n = 3, linear = True, dropout = 0, N = 1000):
     U[:,0] = bernoulli.rvs(p=0.3,size=N)
     U[:,1] = bernoulli.rvs(p=0.5,size=N)
     U[:,2] = bernoulli.rvs(p=0.7,size=N) 
-    U[:,3] = bernoulli.rvs(p=0.2,size=N) 
+    U[:,3] = bernoulli.rvs(p=0.8,size=N) 
 
     latents[:,0] = (U[:,0] + U[:,3])>0
     latents[:,1] = (U[:,1] + U[:,3])>0
