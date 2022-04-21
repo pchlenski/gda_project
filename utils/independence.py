@@ -64,7 +64,7 @@ def boolean_independence(x, y, z, threshold=0.01):
     if z.size > 0:
         # Filter down to Z
         for z_vals in np.unique(z, axis=0):
-            idx = (z == z_vals)
+            idx = [(row == z_vals).all() for row in z]
             x_given_z = x[idx]
             y_given_z = y[idx]
             n_samples_given_z = idx.sum()
