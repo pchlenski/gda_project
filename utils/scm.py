@@ -141,9 +141,9 @@ def generate_dependent(n = 3, linear = True, dropout = 0, N = 1000):
   latents = np.zeros((N,n))
 
   if n ==3:
-    U[:,0] = bernoulli.rvs(p=0.3,size=N)
-    U[:,1] = bernoulli.rvs(p=0.5,size=N)
-    U[:,2] = bernoulli.rvs(p=0.7,size=N) 
+    U[:,0] = bernoulli.rvs(p=0.75,size=N)
+    U[:,1] = bernoulli.rvs(p=0.4,size=N)
+    U[:,2] = bernoulli.rvs(p=0.5,size=N) 
 
     latents[:,0] = U[:,0]
     latents[:,1] = (U[:,1] + latents[:,0])>0
