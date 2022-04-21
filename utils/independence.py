@@ -73,7 +73,7 @@ def boolean_independence(x, y, z, threshold=0.01):
                 marginal_x_given_z = (x_given_z == x_val).sum() / n_samples_given_z
                 for y_val in [True, False]:
                     # TODO: I think we can omit one of the innermost truth values, since there are 2^n-1 degrees of freedom
-                    joint_xy_given_z = (x_given_z == x_val and y_given_z == y_val).sum() / n_samples_given_z
+                    joint_xy_given_z = ((x_given_z == x_val) * (y_given_z == y_val)).sum() / n_samples_given_z
                     marginal_y_given_z = (y_given_z == y_val).sum() / n_samples_given_z
 
                     # Test P(Y,X | Z) = P(Y | Z) * P(X | Z)
@@ -84,7 +84,7 @@ def boolean_independence(x, y, z, threshold=0.01):
         for x_val in [True, False]:
             marginal_x = (x == x_val).sum() / n_samples
             for y_val in [True, False]:
-                joint_xy = (x == x_val and y == y_val).sum() / n_samples
+                joint_xy = ((x == x_val) * (y == y_val)).sum() / n_samples
                 marginal_y = (y == y_val).sum() / n_samples
 
                 if np.abs(joint_xy - marginal_x * marginal_y) > threshold:
