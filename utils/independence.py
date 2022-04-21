@@ -1,6 +1,5 @@
 from itertools import chain, combinations
 from sklearn.linear_model import LinearRegression
-from tqdm import tqdm
 
 def powerset(iterable):
     """ Taken from powertools recipe on itertools page:
@@ -40,6 +39,7 @@ def linear_independence(x, y, z, cutoff=0.4):
 
 def independent(x, y, z):
     """ Cribbed from CI 1 homework 3 """
+
     x = (x - x.mean()) / x.std()
     y = (y - y.mean()) / y.std()
     if z.size > 0:
@@ -50,15 +50,66 @@ def independent(x, y, z):
         x = x - regx.predict(z)
         x = (x - x.mean()) / x.std()
         y = (y - y.mean()) / y.std()
-    val = abs((x*y).mean() - x.mean()*y.mean())*100
-    return val < 1
+    return abs((x*y).mean() - x.mean()*y.mean())*100 < 1
+
+def boolean_independence(x, y, z, threshold=0.01):
+    """ Check independence of boolean variables """
+
+    n_samples, n_conditions = z.shape
+
+    # Type conversion
+    x = x.astype(float)
+
+    if z.size > 0:
+        # Filter down to Z
+        for z_vals in np.unique(z, axis=0):
+            idx = (z == z_vals)
+            x_given_z = x[idx]
+            y_given_z = y[idx]
+            n_samples_given_z = idx.sum()
+
+            # Compute P(Y, X | Z)
+            for x_val in [True, False]:
+                marginal_x_given_z = (x_given_z == x_val).sum() / n_samples_given_z
+                for y_val in [True, False]:
+                    # TODO: I think we can omit one of the innermost truth values, since there are 2^n-1 degrees of freedom
+                    joint_xy_given_z = (x_given_z == x_val and y_given_z == y_val).sum() / n_samples_given_z
+                    marginal_y_given_z = (y_given_z == y_val).sum() / n_samples_given_z
+
+                    # Test P(Y,X | Z) = P(Y | Z) * P(X | Z)
+                    if np.abs(joint_xy_given_z - marginal_y_given_z * marginal_x_given_z) > threshold:
+                        return False
+
+    else:
+        for x_val in [True, False]:
+            marginal_x = (x == x_val).sum() / n_samples
+            for y_val in [True, False]:
+                joint_xy = (x == x_val and y == y_val).sum() / n_samples
+                marginal_y = (y == y_val).sum() / n_samples
+
+                if np.abs(joint_xy - marginal_x * marginal_y) > threshold:
+                    return False
+
+    # If we pass all the tests, then we're good
+    return True
+
+def fcit_independence(x, y, z):
+    """ Use FCIT to test conditional independence """
+    
+    if z.size > 0:
+        return fcit.test(x,y,z)
+    else:
+        return fcit.test(x,y)
+
 
 def test_independences(data, test=linear_independence):
     """ Check each linear (conditional) independence """
+
     n_points, n_dims = data.shape
 
     # Check if (A ind B | Z)
-    for i in tqdm(range(n_dims)):
+    out = []
+    for i in range(n_dims):
         for j in range(i):
             other_dims = list(range(n_dims))
             other_dims.remove(i)
@@ -67,3 +118,5 @@ def test_independences(data, test=linear_independence):
                 ind_result = test(data[:,i],data[:,j],data[:,k])
                 if ind_result:
                     print(f"{i} is independent of {j} given {k}")
+                    out.append([i,j,k])
+    return out
