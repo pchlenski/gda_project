@@ -67,7 +67,7 @@ def boolean_independence(x, y, z, threshold=0.01):
             idx = [(row == z_vals).all() for row in z]
             x_given_z = x[idx]
             y_given_z = y[idx]
-            n_samples_given_z = idx.sum()
+            n_samples_given_z = np.sum(idx)
 
             # Compute P(Y, X | Z)
             for x_val in [True, False]:
