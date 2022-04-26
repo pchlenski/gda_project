@@ -52,7 +52,7 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
       observables = latents @ W
 
   # 4 latent-manifold
-   if n ==4:
+  if n ==4:
     U[:,0] = bernoulli.rvs(p=0.3,size=N)
     U[:,1] = bernoulli.rvs(p=0.5,size=N)
     U[:,2] = bernoulli.rvs(p=0.7,size=N) 
@@ -71,7 +71,7 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
 
 
   # 5 latent-manifold
-   if n ==5:
+  if n ==5:
     U[:,0] = bernoulli.rvs(p=0.3,size=N)
     U[:,1] = bernoulli.rvs(p=0.5,size=N)
     U[:,2] = bernoulli.rvs(p=0.7,size=N) 
@@ -88,7 +88,7 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
       W = np.reshape(W,newshape=(n,10*n))
 
       observables = latents @ W 
-  
+
   return latents, observables
 
 
