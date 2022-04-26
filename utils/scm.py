@@ -235,10 +235,12 @@ def generate_dependent(n = 3, linear = True, dropout = 0, N = 1000):
   if N<=0 or type(N) != int:
     print('N should be a positive integer')
 
-  U = np.zeros((N,n))
+  
   latents = np.zeros((N,n))
 
+# 3-latent manifold
   if n ==3:
+    U = np.zeros((N,n))
     U[:,0] = bernoulli.rvs(p=0.75,size=N)
     U[:,1] = bernoulli.rvs(p=0.4,size=N)
     U[:,2] = bernoulli.rvs(p=0.5,size=N) 
@@ -256,5 +258,56 @@ def generate_dependent(n = 3, linear = True, dropout = 0, N = 1000):
       W = np.reshape(W,newshape=(n,10*n))
 
       observables = latents @ W
-  
+
+
+# 4-latent manifold
+  if n ==4:
+    U = np.zeros((N,n))
+    U[:,0] = bernoulli.rvs(p=0.75,size=N)
+    U[:,1] = bernoulli.rvs(p=0.4,size=N)
+    U[:,2] = bernoulli.rvs(p=0.5,size=N) 
+    U[:,3] = bernoulli.rvs(p=0.5,size=N) 
+
+    latents[:,0] = U[:,0]
+    latents[:,1] = (U[:,1] + latents[:,0])>0
+    latents[:,2] = U[:,2]
+    latents[:,3] = U[:,3]
+
+    if linear:
+      W = np.random.random_sample((n*10*n,1)) # random matrix with weights in [0,1.0)
+      total = n*10*n
+      dropout = int(dropout*total)
+      idx = random.sample(range(total), dropout)
+      W[idx] = 0 # drop some connections
+      W = np.reshape(W,newshape=(n,10*n))
+
+      observables = latents @ W
+
+# 5-latent manifold
+  if n ==5:
+    U = np.zeros((N,n))
+    U[:,0] = bernoulli.rvs(p=0.75,size=N)
+    U[:,1] = bernoulli.rvs(p=0.4,size=N)
+    U[:,2] = bernoulli.rvs(p=0.5,size=N) 
+    U[:,3] = bernoulli.rvs(p=0.5,size=N)
+    U[:,4] = bernoulli.rvs(p=0.75,size=N) 
+
+    latents[:,0] = U[:,0]
+    latents[:,1] = (U[:,1] + latents[:,0])>0
+    latents[:,2] = U[:,2]
+    latents[:,3] = U[:,3]
+    latents[:,4] = (U[:,4] + latents[:,3])>0
+
+    if linear:
+      W = np.random.random_sample((n*10*n,1)) # random matrix with weights in [0,1.0)
+      total = n*10*n
+      dropout = int(dropout*total)
+      idx = random.sample(range(total), dropout)
+      W[idx] = 0 # drop some connections
+      W = np.reshape(W,newshape=(n,10*n))
+
+      observables = latents @ W
+
+
   return latents, observables
+
