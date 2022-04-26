@@ -125,7 +125,7 @@ def fcit_independence(x, y, z, threshold=0.05, return_statistic=False):
         return True
 
 
-def test_independences(data, test=linear_independence):
+def test_independences(data, test=linear_independence, return_statistics=False):
     """ Check each linear (conditional) independence """
 
     n_points, n_dims = data.shape
@@ -139,7 +139,9 @@ def test_independences(data, test=linear_independence):
             other_dims.remove(j)
             for k in powerset(other_dims):
                 ind_result = test(data[:,i],data[:,j],data[:,k])
-                if ind_result:
+                if return_statistics:
+                    out.append([i,j,k])
+                elif ind_result:
                     print(f"{i} is independent of {j} given {k}")
                     out.append([i,j,k])
     return out
