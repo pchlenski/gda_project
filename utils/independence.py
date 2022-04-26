@@ -138,7 +138,7 @@ def test_independences(data, test=linear_independence, return_statistics=False):
             other_dims.remove(i)
             other_dims.remove(j)
             for k in powerset(other_dims):
-                ind_result = test(data[:,i],data[:,j],data[:,k])
+                ind_result = test(data[:,i], data[:,j] ,data[:,k], return_statistic=return_statistics)
                 if return_statistics:
                     out.append([i,j,k])
                 elif ind_result:
