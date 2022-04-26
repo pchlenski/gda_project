@@ -42,7 +42,7 @@ def linear_independence(x, y, z, cutoff=0.4, return_statistic=False):
     else:
         return False
 
-def independent(x, y, z, return_statistic=False):
+def independent(x, y, z, threshold = .01, return_statistic=False):
     """ Cribbed from CI 1 homework 3 """
 
     x = (x - x.mean()) / x.std()
@@ -56,11 +56,11 @@ def independent(x, y, z, return_statistic=False):
         x = (x - x.mean()) / x.std()
         y = (y - y.mean()) / y.std()
 
-    score = abs((x*y).mean() - x.mean()*y.mean())*100
+    score = abs((x*y).mean() - x.mean()*y.mean())
     if return_statistic:
         return score
     else:
-        return score < 1
+        return score < threshold
 
 def boolean_independence(x, y, z, threshold=0.01, return_statistic=False):
     """ Check independence of boolean variables """
