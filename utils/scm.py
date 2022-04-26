@@ -173,8 +173,6 @@ def generate_confounded(n = 3, linear = True, dropout = 0, N = 1000):
       observables = latents @ W
 
 
-  return latents, observables
-
 
   # 5 latent-manifold
   if n ==5:
