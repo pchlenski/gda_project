@@ -40,7 +40,7 @@ def linear_independence(x, y, z, cutoff=0.4, return_statistic=False):
     else:
         return False
 
-def independent(x, y, z, return_statistic=False)):
+def independent(x, y, z, return_statistic=False):
     """ Cribbed from CI 1 homework 3 """
 
     x = (x - x.mean()) / x.std()
