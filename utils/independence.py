@@ -114,11 +114,17 @@ def boolean_independence(x, y, z, threshold=0.01, return_statistic=False):
 def fcit_independence(x, y, z, threshold=0.05, return_statistic=False):
     """ Use FCIT to test conditional independence """
     
+    # Reshape datasets
+    x = x.reshape(-1, 1)
+    y = y.reshape(-1, 1)
+
+    # Run FCIT
     if z.size > 0:
         score = fcit.test(x,y,z)
     else:
         score = fcit.test(x,y)
 
+    # Outputs
     if return_statistic:
         return score
     elif return_statistic > threshold:
