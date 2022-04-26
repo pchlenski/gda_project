@@ -140,8 +140,8 @@ def test_independences(data, test=linear_independence, return_statistics=False):
             for k in powerset(other_dims):
                 ind_result = test(data[:,i], data[:,j] ,data[:,k], return_statistic=return_statistics)
                 if return_statistics:
-                    out.append([i,j,k])
+                    out.append([i, j, k, ind_result])
                 elif ind_result:
                     print(f"{i} is independent of {j} given {k}")
-                    out.append([i,j,k])
+                    out.append([i, j, k])
     return out
