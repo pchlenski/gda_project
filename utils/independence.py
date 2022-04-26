@@ -8,7 +8,7 @@ def powerset(iterable):
     s = list(iterable)
     return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
 
-def linear_independence(x, y, z, cutoff=0.4):
+def linear_independence(x, y, z, cutoff=0.4, return_statistic=False):
     """ Check if (X ind Y | Z) by regressing Y on Z, then regressing the
     residuals on X """
 
@@ -33,12 +33,14 @@ def linear_independence(x, y, z, cutoff=0.4):
     
     # Test goodness-of-fit
     score = reg2.score(x, y_from_z)
-    if score < cutoff:
+    if return_statistic:
+        return score
+    elif score < cutoff:
         return True
     else:
         return False
 
-def independent(x, y, z):
+def independent(x, y, z, return_statistic=False)):
     """ Cribbed from CI 1 homework 3 """
 
     x = (x - x.mean()) / x.std()
@@ -51,9 +53,14 @@ def independent(x, y, z):
         x = x - regx.predict(z)
         x = (x - x.mean()) / x.std()
         y = (y - y.mean()) / y.std()
-    return abs((x*y).mean() - x.mean()*y.mean())*100 < 1
 
-def boolean_independence(x, y, z, threshold=0.01):
+    score = abs((x*y).mean() - x.mean()*y.mean())*100
+    if return_statistic:
+        return score
+    else:
+        return score < 1
+
+def boolean_independence(x, y, z, threshold=0.01, return_statistic=False):
     """ Check independence of boolean variables """
 
     n_samples, n_conditions = z.shape
@@ -61,6 +68,7 @@ def boolean_independence(x, y, z, threshold=0.01):
     # Type conversion
     x = x.astype(float)
 
+    # Conditioning case
     if z.size > 0:
         # Filter down to Z
         for z_vals in np.unique(z, axis=0):
@@ -78,9 +86,9 @@ def boolean_independence(x, y, z, threshold=0.01):
                     marginal_y_given_z = (y_given_z == y_val).sum() / n_samples_given_z
 
                     # Test P(Y,X | Z) = P(Y | Z) * P(X | Z)
-                    if np.abs(joint_xy_given_z - marginal_y_given_z * marginal_x_given_z) > threshold:
-                        return False
+                    score = np.abs(joint_xy_given_z - marginal_y_given_z * marginal_x_given_z)
 
+    # No conditioning case
     else:
         for x_val in [True, False]:
             marginal_x = (x == x_val).sum() / n_samples
@@ -88,19 +96,33 @@ def boolean_independence(x, y, z, threshold=0.01):
                 joint_xy = ((x == x_val) * (y == y_val)).sum() / n_samples
                 marginal_y = (y == y_val).sum() / n_samples
 
-                if np.abs(joint_xy - marginal_x * marginal_y) > threshold:
-                    return False
+                score = np.abs(joint_xy - marginal_x * marginal_y)
+
+    # Return score / boolean
+    if return_statistic:
+        return score
+    elif score > threshold:
+        return False
+    else:
+        return True
 
     # If we pass all the tests, then we're good
     return True
 
-def fcit_independence(x, y, z):
+def fcit_independence(x, y, z, threshold=0.05, return_statistic=False):
     """ Use FCIT to test conditional independence """
     
     if z.size > 0:
-        return fcit.test(x,y,z)
+        score = fcit.test(x,y,z)
     else:
-        return fcit.test(x,y)
+        score = fcit.test(x,y)
+
+    if return_statistic:
+        return score
+    elif return_statistic > threshold:
+        return False
+    else:
+        return True
 
 
 def test_independences(data, test=linear_independence):
