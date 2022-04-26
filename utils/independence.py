@@ -1,5 +1,6 @@
 from itertools import chain, combinations
 from sklearn.linear_model import LinearRegression
+from tqdm import tqdm
 import numpy as np
 
 def powerset(iterable):
@@ -132,7 +133,7 @@ def test_independences(data, test=linear_independence, return_statistics=False):
 
     # Check if (A ind B | Z)
     out = []
-    for i in range(n_dims):
+    for i in tqdm(range(n_dims)):
         for j in range(i):
             other_dims = list(range(n_dims))
             other_dims.remove(i)
