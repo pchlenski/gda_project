@@ -1,7 +1,7 @@
 from itertools import chain, combinations
 from sklearn.linear_model import LinearRegression
 from tqdm import tqdm
-import fcit
+from fcit import fcit
 import numpy as np
 
 def powerset(iterable):
