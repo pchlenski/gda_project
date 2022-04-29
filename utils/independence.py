@@ -10,7 +10,7 @@ def powerset(iterable):
     s = list(iterable)
     return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
 
-def linear_independence(x, y, z, cutoff=0.4, return_statistic=False):
+def linear_independence(x, y, z, cutoff=0.01, return_statistic=False):
     """ Check if (X ind Y | Z) by regressing Y on Z, then regressing the
     residuals on X """
 
