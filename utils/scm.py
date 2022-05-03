@@ -18,6 +18,7 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
 
   latent (N x n; float): latent variables
   observables (N x 10*n; float): observable variables
+  labels (N x 1): classification label per sample
   '''
 
   if n not in [3,4,5]:
@@ -33,6 +34,7 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
     print('N should be a positive integer')
 
   U = np.zeros((N,n))
+  Y = np.zeros((N,n))
 
   # 3 latent-manifold
   if n ==3:
@@ -40,6 +42,7 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
     U[:,1] = bernoulli.rvs(p=0.5,size=N)
     U[:,2] = bernoulli.rvs(p=0.7,size=N) 
     latents = U
+    
 
     if linear:
       W = np.random.random_sample((n*10*n,1)) # random matrix with weights in [0,1.0)
@@ -48,16 +51,21 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
       idx = random.sample(range(total), dropout)
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
-
       observables = latents @ W
 
+      vec = np.random.randint(1,6,n)
+      threshold = np.random.randint(2*n + 1)
+      Y = np.zeros((N,n))
+      Y = (latents @ vec.T) > threshold
+
+
   # 4 latent-manifold
-  if n ==4:
-    U[:,0] = bernoulli.rvs(p=0.3,size=N)
-    U[:,1] = bernoulli.rvs(p=0.5,size=N)
-    U[:,2] = bernoulli.rvs(p=0.7,size=N) 
-    U[:,3] = bernoulli.rvs(p=0.6,size=N) 
-    latents = U
+    if n ==4:
+      U[:,0] = bernoulli.rvs(p=0.3,size=N)
+      U[:,1] = bernoulli.rvs(p=0.5,size=N)
+      U[:,2] = bernoulli.rvs(p=0.7,size=N) 
+      U[:,3] = bernoulli.rvs(p=0.6,size=N) 
+      latents = U
 
     if linear:
       W = np.random.random_sample((n*10*n,1)) # random matrix with weights in [0,1.0)
@@ -66,18 +74,22 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
       idx = random.sample(range(total), dropout)
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
+      observables = latents @ W
 
-      observables = latents @ W 
+      vec = np.random.randint(1,6,n)
+      threshold = np.random.randint(3*n + 1)
+      Y = np.zeros((N,n))
+      Y = (latents @ vec.T) > threshold
 
 
   # 5 latent-manifold
-  if n ==5:
-    U[:,0] = bernoulli.rvs(p=0.3,size=N)
-    U[:,1] = bernoulli.rvs(p=0.5,size=N)
-    U[:,2] = bernoulli.rvs(p=0.7,size=N) 
-    U[:,3] = bernoulli.rvs(p=0.6,size=N) 
-    U[:,4] = bernoulli.rvs(p=0.8,size=N) 
-    latents = U
+    if n ==5:
+      U[:,0] = bernoulli.rvs(p=0.3,size=N)
+      U[:,1] = bernoulli.rvs(p=0.5,size=N)
+      U[:,2] = bernoulli.rvs(p=0.7,size=N) 
+      U[:,3] = bernoulli.rvs(p=0.6,size=N) 
+      U[:,4] = bernoulli.rvs(p=0.8,size=N) 
+      latents = U
 
     if linear:
       W = np.random.random_sample((n*10*n,1)) # random matrix with weights in [0,1.0)
@@ -86,10 +98,15 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
       idx = random.sample(range(total), dropout)
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
-
       observables = latents @ W 
 
-  return latents, observables
+      vec = np.random.randint(1,6,n)
+      threshold = np.random.randint(3*n + 1)
+      Y = np.zeros((N,n))
+      Y = (latents @ vec.T) > threshold
+      
+  return latents, observables, Y
+
 
 
 def generate_confounded(n = 3, linear = True, dropout = 0, N = 1000):
@@ -107,6 +124,7 @@ def generate_confounded(n = 3, linear = True, dropout = 0, N = 1000):
 
   latent (N x n; float): latent variables
   observables (N x 10*n; float): observable variables
+  labels (N x 1): classification label per sample
   '''
 
   if n not in [3,4,5]:
@@ -123,6 +141,7 @@ def generate_confounded(n = 3, linear = True, dropout = 0, N = 1000):
 
 
   latents = np.zeros((N,n))
+  Y = np.zeros((N,n))
 
 # 3 latent-manifold
   if n ==3:
@@ -143,8 +162,12 @@ def generate_confounded(n = 3, linear = True, dropout = 0, N = 1000):
       idx = random.sample(range(total), dropout)
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
-
       observables = latents @ W
+
+      vec = np.random.randint(1,6,n)
+      threshold = np.random.randint(4*n + 1)
+      Y = np.zeros((N,n))
+      Y = (latents @ vec.T) > threshold
 
 
 # 4 latent-manifold
@@ -169,9 +192,11 @@ def generate_confounded(n = 3, linear = True, dropout = 0, N = 1000):
       idx = random.sample(range(total), dropout)
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
-
       observables = latents @ W
-
+      vec = np.random.randint(1,6,n)
+      threshold = np.random.randint(5*n + 1)
+      Y = np.zeros((N,n))
+      Y = (latents @ vec.T) > threshold
 
 
   # 5 latent-manifold
@@ -199,8 +224,16 @@ def generate_confounded(n = 3, linear = True, dropout = 0, N = 1000):
       idx = random.sample(range(total), dropout)
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
-
       observables = latents @ W
+
+      vec = np.random.randint(1,6,n)
+      threshold = np.random.randint(4*n + 1)
+      Y = np.zeros((N,n))
+      Y = (latents @ vec.T) > threshold
+
+
+  return latents, observables, Y
+
 
 
   return latents, observables
@@ -221,6 +254,7 @@ def generate_dependent(n = 3, linear = True, dropout = 0, N = 1000):
 
   latent (N x n; float): latent variables
   observables (N x 10*n; float): observable variables
+  labels (N x 1): classification label per sample
   '''
 
   if n not in [3,4,5]:
@@ -256,8 +290,12 @@ def generate_dependent(n = 3, linear = True, dropout = 0, N = 1000):
       idx = random.sample(range(total), dropout)
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
-
       observables = latents @ W
+
+      vec = np.random.randint(1,6,n)
+      threshold = np.random.randint(4*n + 1)
+      Y = np.zeros((N,n))
+      Y = (latents @ vec.T) > threshold
 
 
 # 4-latent manifold
@@ -280,8 +318,11 @@ def generate_dependent(n = 3, linear = True, dropout = 0, N = 1000):
       idx = random.sample(range(total), dropout)
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
-
       observables = latents @ W
+      vec = np.random.randint(1,6,n)
+      threshold = np.random.randint(4*n + 1)
+      Y = np.zeros((N,n))
+      Y = (latents @ vec.T) > threshold
 
 # 5-latent manifold
   if n ==5:
@@ -305,9 +346,14 @@ def generate_dependent(n = 3, linear = True, dropout = 0, N = 1000):
       idx = random.sample(range(total), dropout)
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
-
       observables = latents @ W
 
+      vec = np.random.randint(1,6,n)
+      threshold = np.random.randint(4*n + 1)
+      Y = np.zeros((N,n))
+      Y = (latents @ vec.T) > threshold
 
-  return latents, observables
+
+  return latents, observables, Y
+
 
