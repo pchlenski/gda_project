@@ -20,7 +20,7 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
   observables (N x 10*n; float): observable variables
   labels (N x 1): classification label per sample
   '''
-
+  print("precheck")
   if n not in [3,4,5]:
     print('n should be in {3,4,5}')
     return
