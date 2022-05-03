@@ -36,6 +36,7 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
   U = np.zeros((N,n))
   Y = np.zeros((N,n))
 
+  print("check1")  
   # 3 latent-manifold
   if n ==3:
     U[:,0] = bernoulli.rvs(p=0.3,size=N)
@@ -43,15 +44,18 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
     U[:,2] = bernoulli.rvs(p=0.7,size=N) 
     latents = U
     
+    print("check2")
     if linear:
       W = np.random.random_sample((n*10*n,1)) # random matrix with weights in [0,1.0)
       total = n*10*n
       dropout = int(dropout*total)
+      print("check3")
       idx = random.sample(range(total), dropout)
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
       observables = latents @ W
-
+      
+      print("check4")
       vec = np.random.randint(1,6,n)
       threshold = np.random.randint(2*n + 1)
       Y = np.zeros((N,n))
