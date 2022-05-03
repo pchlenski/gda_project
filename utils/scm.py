@@ -60,12 +60,12 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
 
 
   # 4 latent-manifold
-    if n ==4:
-      U[:,0] = bernoulli.rvs(p=0.3,size=N)
-      U[:,1] = bernoulli.rvs(p=0.5,size=N)
-      U[:,2] = bernoulli.rvs(p=0.7,size=N) 
-      U[:,3] = bernoulli.rvs(p=0.6,size=N) 
-      latents = U
+  if n ==4:
+    U[:,0] = bernoulli.rvs(p=0.3,size=N)
+    U[:,1] = bernoulli.rvs(p=0.5,size=N)
+    U[:,2] = bernoulli.rvs(p=0.7,size=N) 
+    U[:,3] = bernoulli.rvs(p=0.6,size=N) 
+    latents = U
 
     if linear:
       W = np.random.random_sample((n*10*n,1)) # random matrix with weights in [0,1.0)
@@ -83,13 +83,13 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
 
 
   # 5 latent-manifold
-    if n ==5:
-      U[:,0] = bernoulli.rvs(p=0.3,size=N)
-      U[:,1] = bernoulli.rvs(p=0.5,size=N)
-      U[:,2] = bernoulli.rvs(p=0.7,size=N) 
-      U[:,3] = bernoulli.rvs(p=0.6,size=N) 
-      U[:,4] = bernoulli.rvs(p=0.8,size=N) 
-      latents = U
+  if n ==5:
+    U[:,0] = bernoulli.rvs(p=0.3,size=N)
+    U[:,1] = bernoulli.rvs(p=0.5,size=N)
+    U[:,2] = bernoulli.rvs(p=0.7,size=N) 
+    U[:,3] = bernoulli.rvs(p=0.6,size=N) 
+    U[:,4] = bernoulli.rvs(p=0.8,size=N) 
+    latents = U
 
     if linear:
       W = np.random.random_sample((n*10*n,1)) # random matrix with weights in [0,1.0)
