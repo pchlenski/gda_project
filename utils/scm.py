@@ -49,6 +49,8 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
       total = n*10*n
       dropout = int(dropout*total)
       idx = random.sample(range(total), dropout)
+      print("dropout: " dropout)
+      print("total: " total)
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
       observables = latents @ W
