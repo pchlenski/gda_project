@@ -14,6 +14,7 @@ from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from gda_project.utils.embed import *
 import warnings
 warnings.filterwarnings('ignore')
+import pycid
 
 def print_scm_large(index=1):
   if index == 1:
