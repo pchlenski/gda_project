@@ -42,7 +42,7 @@ def print_scm_large(index=1):
 
 
     
- def scm_large(index=1, N=1000, noise=0.0, dropout=0.0):
+def scm_large(index=1, N=1000, noise=0.0, dropout=0.0):
 
   if index == 1:
     # define first SCM
