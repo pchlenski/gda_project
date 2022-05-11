@@ -1,11 +1,11 @@
-# importing necessary libraries
-try:
-    import pycid
-except ModuleNotFoundError:
-    import sys
+# # importing necessary libraries
+# try:
+#     import pycid
+# except ModuleNotFoundError:
+#     import sys
 
-    !{sys.executable} -m pip install git+https://github.com/causalincentives/pycid # for the latest development version
-    import pycid
+#     !{sys.executable} -m pip install git+https://github.com/causalincentives/pycid # for the latest development version
+#     import pycid
 
 import numpy as np
 import random
