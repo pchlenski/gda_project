@@ -3,7 +3,7 @@ import pandas as pd
 from scipy.stats import bernoulli
 import random
 
-def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
+def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000, noise=1.0):
   '''
   Generates SCM with n independent latent variables and 10*n observable variables
 
@@ -54,6 +54,7 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
       observables = latents @ W
+      observables += np.random.normal(0,noise,n*10) # add noise
       
       print("check4")
       vec = np.random.randint(1,6,n)
@@ -113,7 +114,7 @@ def generate_unconfounded(n = 3, linear = True, dropout = 0, N = 1000):
 
 
 
-def generate_confounded(n = 3, linear = True, dropout = 0, N = 1000):
+def generate_confounded(n = 3, linear = True, dropout = 0, N = 1000, noise=1.0):
   '''
   Generates SCM with n confounded latent variables and 10*n observable variables
 
@@ -167,6 +168,7 @@ def generate_confounded(n = 3, linear = True, dropout = 0, N = 1000):
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
       observables = latents @ W
+      observables += np.random.normal(0,noise,n*10) # add noise
 
       vec = np.random.randint(1,6,n)
       threshold = np.random.randint(4*n + 1)
@@ -243,7 +245,7 @@ def generate_confounded(n = 3, linear = True, dropout = 0, N = 1000):
   return latents, observables
 
 
-def generate_dependent(n = 3, linear = True, dropout = 0, N = 1000):
+def generate_dependent(n = 3, linear = True, dropout = 0, N = 1000, noise=1.0):
   '''
   Generates SCM with n dependent latent variables and 10*n observable variables
 
@@ -295,6 +297,7 @@ def generate_dependent(n = 3, linear = True, dropout = 0, N = 1000):
       W[idx] = 0 # drop some connections
       W = np.reshape(W,newshape=(n,10*n))
       observables = latents @ W
+      observables += np.random.normal(0,noise,n*10) # add noise
 
       vec = np.random.randint(1,6,n)
       threshold = np.random.randint(4*n + 1)
